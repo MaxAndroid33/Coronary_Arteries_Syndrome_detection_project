@@ -1,1 +1,5 @@
+adafruit/Adafruit LSM303 Accel@^1.1.6
+fmalpartida/LiquidCrystal@^1.5.0
+adafruit/Adafruit BusIO@^1.14.1
 oxullo/MAX30100lib@^1.2.1
+pololu/LSM303@^3.0.1
