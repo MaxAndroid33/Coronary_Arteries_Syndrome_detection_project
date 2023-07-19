@@ -1,20 +1,18 @@
 #include <Connection.h>
 #include <AsyncElegantOTA.h>
-Connection::Connection(const char* ss, const char* pass):
-                                        ssid(ss),
-                                        password(pass), 
-                                        server(80), 
-                                        websocket("/ws")
-{
-    //apIP(8,8,4,4) //TODO used to explain MDNS
-}
+#include "index.h"
+Connection::Connection(const char *ss, const char *pass) : ssid(ss),
+                                                           password(pass),
+                                                           server(80)
 
+{
+    
+}
 
 void Connection::setupAP()
 {
     WiFi.softAP(ssid, password);
     ip = WiFi.softAPIP();
-    ipaddress = "HUB|" + ip.toString();
     Serial.print("AP IP address: ");
     Serial.println(ip);
 }
@@ -24,54 +22,39 @@ void Connection::setupWIFI()
     WiFi.begin(ssid, password);
     Serial.println("\nConnecting");
 
-    while(WiFi.status() != WL_CONNECTED){
+    while (WiFi.status() != WL_CONNECTED)
+    {
         Serial.print(".");
         delay(100);
     }
     IPAddress ip = WiFi.localIP();
-    ipaddress = "HUB|"+ ip.toString();
+
     Serial.print("IP address: ");
-    Serial.println(ipaddress);
+    Serial.println(ip);
 }
 
 void Connection::setupServer()
 {
-    server.addHandler(&websocket);
 
-    server.on("/", HTTP_GET, [this](AsyncWebServerRequest *request){
-         request->send(200, "text/plain", this->message); 
-    });
-    server.onNotFound([](AsyncWebServerRequest *request){
-        String nfmsg = "Hello World!\n\n";
-        nfmsg += "URI: ";
-        nfmsg += request->url();
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/html", index_html); });
 
-        request->send(200, "text/plain", nfmsg); 
-    });
-    AsyncElegantOTA.begin(&server);    // Start ElegantOTA
+    server.on("/save", HTTP_POST, [this](AsyncWebServerRequest *request)
+              { writeData(request); });
+    server.on("/remove", HTTP_POST, [this](AsyncWebServerRequest *request)
+              { removeAllData(request); });
+    server.onNotFound([](AsyncWebServerRequest *request)
+                      {
+        String nfmsg = "Not found\n\n";
+        request->send(200, "text/plain", nfmsg); });
+    AsyncElegantOTA.begin(&server); // Start ElegantOTA
     server.begin();
-}
-void Connection::setupWebsocket()
-{
-    websocket.onEvent([this](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len){
-        if(type == WS_EVT_CONNECT)
-        {
-            Serial.println("WebSocket client connected");
-        } 
-        else if(type == WS_EVT_DISCONNECT)
-        {
-            Serial.println("WebSocket client disconnected");
-        } 
-        else if(type == WS_EVT_DATA)
-        {
-            this->handleWebSocketMessage(arg, data, len);
-        }
-    });
+    preferences.begin("AllData", false);
 }
 
-void Connection::setup(void(*hwsm)(void *, uint8_t *, size_t ), bool isAccessPoint)
+void Connection::setup(bool isAccessPoint)
 {
-    if(isAccessPoint)
+    if (isAccessPoint)
     {
         setupAP();
     }
@@ -80,27 +63,77 @@ void Connection::setup(void(*hwsm)(void *, uint8_t *, size_t ), bool isAccessPoi
         setupWIFI();
     }
     setupServer();
-    setupWebsocket();
-   
-
-    handleWebSocketMessage = hwsm;
 }
 
-void Connection::update()
+void Connection::writeData(AsyncWebServerRequest *request)
 {
-    
-    websocket.cleanupClients();
+    if (request->hasParam("id", true))
+    {
+        preferences.putString("id", request->getParam("id", true)->value());
+        preferences.putString("gender", request->getParam("gender", true)->value());
+        preferences.putString("age", request->getParam("age", true)->value());
+        preferences.putString("date", request->getParam("date", true)->value());
+        preferences.putString("DSP", request->getParam("DSP", true)->value());
+        preferences.putString("NHR", request->getParam("NHR", true)->value());
+        preferences.putString("SBP", request->getParam("SBP", true)->value());
+        preferences.putString("NBT", request->getParam("NBT", true)->value());
+        preferences.putString("NSPO", request->getParam("NSPO", true)->value());
+        preferences.putString("chol", request->hasParam("chol", true) ? "Yes" : "No");
+        preferences.putString("hyper", request->hasParam("hyper", true) ? "Yes" : "No");
+        preferences.putString("diabetes", request->hasParam("diabetes", true) ? "Yes" : "No");
+        preferences.putString("overw", request->hasParam("overw", true) ? "Yes" : "No");
+        preferences.putString("smok", request->hasParam("smok", true) ? "Yes" : "No");
+        preferences.putString("alcoh", request->hasParam("alcoh", true) ? "Yes" : "No");
+    }
+    // Close the Preferences
+    preferences.end();
+    request->send(200, "text/plain", "Values saved successfully!");
+    // Wait 10 seconds
+    Serial.println("Restarting in 10 seconds...");
+    delay(10000);
+
+    // Restart ESP
+    ESP.restart();
 }
 
-void Connection::broadcastIP()
+String Connection::readFromSD(const char *key)
 {
-    udp.beginPacket(UDP_ADRS, UDP_PORT);
-    udp.printf(ipaddress.c_str());
-    udp.endPacket();
+    return preferences.getString(key, "None");
 }
-void Connection::broadcastMsg(String msg)
+
+String Connection::readAllData()
 {
-    message = msg;
-    Serial.println(message);
-    websocket.textAll(message);
+    String all = String("ID :") + readFromSD("id") + String("\n") +
+                 String("Gender :") + readFromSD("gender") + String("\n") +
+                 String("Age :") + readFromSD("age") + String("\n") +
+                 String("Date") + readFromSD("date") + String("\n") +
+                 String("DSP :") + readFromSD("DSP") + String("\n") +
+                 String("NHR :") + readFromSD("NHR") + String("\n") +
+                 String("SBP :") + readFromSD("SBP") + String("\n") +
+                 String("NBT :") + readFromSD("NBT") + String("\n") +
+                 String("Normal SPO2 :") + readFromSD("NSPO") + String("\n") +
+                 String("Cholesterol :") + readFromSD("chol") + String("\n") +
+                 String("Hypertension :") + readFromSD("hyper") + String("\n") +
+                 String("Diabetes :") + readFromSD("diabetes") + String("\n") +
+                 String("OverWight :") + readFromSD("overw") + String("\n") +
+                 String("Smoking :") + readFromSD("smok") + String("\n") +
+                 String("Alcohol :") + readFromSD("alcoh") + String("\n");
+    return all;
+}
+
+void Connection::removeAllData(AsyncWebServerRequest *request)
+{   request->send(200, "text/plain", "remove All Data !!! <br> Restarting in 10 seconds...");
+    preferences.clear();
+    Serial.println("Restarting in 10 seconds...");
+    delay(10000);
+
+    // Restart ESP
+    ESP.restart();
+}
+
+void Connection::checkOneTimeSetup()
+{   String check = readFromSD("id");
+    while( check== "None"){
+        Serial.println("You Have To Setup Profile First !!!");
+    }
 }
