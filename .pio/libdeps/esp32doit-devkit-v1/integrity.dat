@@ -1,4 +1,6 @@
 ESP Async WebServer
+nkawu/TFT 22 ILI9225@^1.4.5
+oxullo/MAX30100lib@^1.2.1
 ayushsharma82/AsyncElegantOTA @ ^2.2.5
 https://github.com/dvarrel/ESPAsyncWebSrv.git
 oxullo/MAX30100lib@^1.2.1
