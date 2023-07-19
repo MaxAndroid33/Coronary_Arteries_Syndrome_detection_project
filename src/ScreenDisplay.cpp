@@ -5,7 +5,7 @@ void ScreenDisplay::setup(SPIClass &hspi)
     hspi.begin();
     tft.begin(hspi);
 
-    tft.setOrientation(3);
+    
 }
 void ScreenDisplay::displaySetup(String message)
 {

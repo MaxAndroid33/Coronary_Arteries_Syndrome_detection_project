@@ -3,19 +3,16 @@
 
 void HeartRate::setup()
 {
-    Serial.begin(115200);
     Serial.print("Initializing pulse oximeter..");
     // Initialize sensor
-    if (!pox.begin())
+    while(!pox.begin())
     {
         Serial.println("FAILED");
-        for (;;)
-            ;
+        
     }
-    else
-    {
+    
         Serial.println("SUCCESS");
-    }
+    
     // Configure sensor to use 7.6mA for LED drive
     pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
 }

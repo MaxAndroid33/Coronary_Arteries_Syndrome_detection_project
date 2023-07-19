@@ -1,6 +1,8 @@
-ESP Async WebServer
 nkawu/TFT 22 ILI9225@^1.4.5
-oxullo/MAX30100lib@^1.2.1
+adafruit/Adafruit LSM303 Accel@^1.1.6
+pololu/LSM303@^3.0.1
+adafruit/Adafruit BusIO@^1.14.1
+ESP Async WebServer
 ayushsharma82/AsyncElegantOTA @ ^2.2.5
 https://github.com/dvarrel/ESPAsyncWebSrv.git
 oxullo/MAX30100lib@^1.2.1

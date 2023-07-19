@@ -1,7 +1,10 @@
 #ifndef __SCREENDISPLAY_H__
 #define __SCREENDISPLAY_H__
 
+#ifndef __ARDUINO_H
+#define __ARDUINO_H
 #include <Arduino.h>
+#endif
 #include <TFT_22_ILI9225.h>
 #include "SPIFFS.h"
 
@@ -27,7 +30,7 @@ private:
 public:
     TFT_22_ILI9225 tft = TFT_22_ILI9225(TFT_RST, TFT_RS, TFT_CS, TFT_LED, TFT_BRIGHTNESS);
 
-    int orientation();
+    
     void displaySetup(String message);
     void displayHeartRate(float heartRateValue);
     void displaySpO2(float spo2Value);
