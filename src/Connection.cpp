@@ -27,7 +27,7 @@ void Connection::setupWIFI()
         Serial.print(".");
         delay(100);
     }
-    IPAddress ip = WiFi.localIP();
+     ip = WiFi.localIP();
 
     Serial.print("IP address: ");
     Serial.println(ip);

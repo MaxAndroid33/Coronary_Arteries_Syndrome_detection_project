@@ -6,13 +6,9 @@
 #include "ESPAsyncWebServer.h"
 #include <Preferences.h>
 
-
-
-
 class Connection
 {
 private:
-    IPAddress ip;
     AsyncWebServer server;
     Preferences preferences;
     const char *ssid;
@@ -24,14 +20,14 @@ private:
     void setupServer();
 
 public:
+    IPAddress ip;
     Connection(const char *, const char *);
     void setup(bool isAccessPoint = true);
     void writeData(AsyncWebServerRequest *request);
-    String readFromSD(const char * key);
+    String readFromSD(const char *key);
     String readAllData();
     void removeAllData(AsyncWebServerRequest *request);
     void checkOneTimeSetup();
-
 };
 
 #endif
