@@ -9,6 +9,12 @@
 #define __WIRE_H
 #include <Wire.h>
 #endif
+
+#ifndef __SCREENDISPLAY_H
+#define __SCREENDISPLAY_H
+#include "ScreenDisplay.h"
+#endif
+
 #include <LSM303.h>
 #include <Adafruit_Sensor.h>
 #include <SPI.h>
@@ -24,7 +30,7 @@ float newX, newY, newZ;
 float differenceThreshold = 500;  // Adjust this value as per the sensitivity you want
 public:
 
-void setup();
+void setup(ScreenDisplay &lcd);
 
 bool detectMoving(); //return ('true' means moving , 'false' means not moving )
 

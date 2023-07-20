@@ -1,12 +1,22 @@
 
 #include "DetectMoving.h"
 
-void DetectMoving::setup()
-{
+void DetectMoving::setup(ScreenDisplay &lcd)
+{   int count =0;
     Serial.begin(115200);
     Wire.begin(SDA_PIN, SCL_PIN); // Set the SDA and SCL pins
-        while (!compass.init())
-            Serial.println("Failed to detect and initialize compass!");  
+        while (!compass.init()){
+            if(count==0){
+            lcd.setText(20,0,"Failed Initialize ");
+            lcd.setText(20,35,"Moving Sensor "); 
+            }
+            count++;
+        }
+        lcd.clearScreen();
+        lcd.setText(20,0,"Successfully");
+        lcd.setText(40,35,"Detect");
+        lcd.setText(0,70,"Moving Sensor ");
+        delay(3000);
     compass.enableDefault();
 }
 

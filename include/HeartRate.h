@@ -10,6 +10,11 @@
 #include <Wire.h>
 #endif
 
+#ifndef __SCREENDISPLAY_H
+#define __SCREENDISPLAY_H
+#include "ScreenDisplay.h"
+#endif
+
 #include "MAX30100_PulseOximeter.h"
 
 #define REPORTING_PERIOD_MS     1000
@@ -21,7 +26,7 @@ public:
 // Create a PulseOximeter object
 PulseOximeter pox;
 
-void setup();
+void setup(ScreenDisplay &lcd);
 float readHeartRate();
 float readOxygenSaturation();
 

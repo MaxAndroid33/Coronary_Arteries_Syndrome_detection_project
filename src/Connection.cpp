@@ -6,31 +6,42 @@ Connection::Connection(const char *ss, const char *pass) : ssid(ss),
                                                            server(80)
 
 {
-    
 }
 
-void Connection::setupAP()
+void Connection::setupAP(ScreenDisplay &lcd)
 {
     WiFi.softAP(ssid, password);
     ip = WiFi.softAPIP();
     Serial.print("AP IP address: ");
+    lcd.setText(0, 0, "AP IP Address:");
+    lcd.setText(0, 35, ip.toString());
+    delay(3000);
+
     Serial.println(ip);
 }
 
-void Connection::setupWIFI()
+void Connection::setupWIFI(ScreenDisplay &lcd)
 {
     WiFi.begin(ssid, password);
     Serial.println("\nConnecting");
-
+    lcd.setText(20, 0, "Connecting");
+    int count = 0;
     while (WiFi.status() != WL_CONNECTED)
     {
         Serial.print(".");
+        lcd.setText(count, 35, ".");
+        if (count == lcd.tft.maxX())
+            count = 0;
         delay(100);
+        count++;
     }
-     ip = WiFi.localIP();
+    ip = WiFi.localIP();
 
     Serial.print("IP address: ");
     Serial.println(ip);
+    lcd.setText(0, 70, "AP IP Address:");
+    lcd.setText(0, 105, ip.toString());
+    delay(3000);
 }
 
 void Connection::setupServer()
@@ -52,17 +63,22 @@ void Connection::setupServer()
     preferences.begin("AllData", false);
 }
 
-void Connection::setup(bool isAccessPoint)
+
+
+void Connection::setup(ScreenDisplay &lcd, bool isAccessPoint)
 {
+   
     if (isAccessPoint)
     {
-        setupAP();
+        setupAP(lcd);
     }
     else
     {
-        setupWIFI();
+        setupWIFI(lcd);
     }
+    
     setupServer();
+    
 }
 
 void Connection::writeData(AsyncWebServerRequest *request)
@@ -122,7 +138,8 @@ String Connection::readAllData()
 }
 
 void Connection::removeAllData(AsyncWebServerRequest *request)
-{   request->send(200, "text/plain", "remove All Data !!! <br> Restarting in 10 seconds...");
+{
+    request->send(200, "text/plain", "remove All Data !!! <br> Restarting in 10 seconds...");
     preferences.clear();
     Serial.println("Restarting in 10 seconds...");
     delay(10000);
@@ -132,8 +149,9 @@ void Connection::removeAllData(AsyncWebServerRequest *request)
 }
 
 void Connection::checkOneTimeSetup()
-{   String check = readFromSD("id");
-    while( check== "None"){
-        Serial.println("You Have To Setup Profile First !!!");
+{
+    String check = readFromSD("id");
+    while (check == "None")
+    {
     }
 }

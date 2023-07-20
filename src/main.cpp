@@ -21,27 +21,32 @@ void onBeatDetected()
 }
 void setup()
 {
-
+    // Initialize All Sensors 
     Serial.begin(115200);
     lcd.setup(hspi);
-    moving.setup();
-    heart.setup();
+    moving.setup(lcd);
+    lcd.clearScreen();
+    heart.setup(lcd);
     heart.pox.setOnBeatDetectedCallback(onBeatDetected);
+    lcd.clearScreen();
 
+
+   
+    connection.setup(lcd);
+    lcd.clearScreen();
+    lcd.setText(0, 0, "Enter The Profile");
+    lcd.setText(0, 35, "Info In WebPage:");
+    lcd.setText(0, 70, "http://" );
+     lcd.setText(0, 105, connection.ip.toString() );
     
-    lcd.setText(0, 0, "Connection To WiFi...");
-    connection.setup(false);
-    lcd.clearScreen();
-    lcd.setText(50, 50, "Connected ");
-    delay(3000);
-    lcd.clearScreen();
-    lcd.setText(0, 0, "Enter The Profile Info");
-    lcd.setText(0, 35, "In WebPage :");
-    lcd.setText(0, 70, "http://" + connection.ip.toString());
+    lcd.setText(0, 140, "WiFiName:"+String(ssid));
+    lcd.setText(0, 175, "Pass:"+String(password));
+    
     connection.checkOneTimeSetup();
     lcd.clearScreen();
-    lcd.setText(50, 0, "Successfully");
-    lcd.setText(0, 35, "Completed The Profile");
+    lcd.setText(20, 0, "Successfully");
+    lcd.setText(20, 35, "Completed");
+    lcd.setText(0, 75, "Patient Profile");
     delay(3000);
     lcd.clearScreen();
     Serial.print(connection.readAllData());
