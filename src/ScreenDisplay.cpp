@@ -26,7 +26,7 @@ void ScreenDisplay::displaySpO2(float spo2Value)
 
 void ScreenDisplay::clearScreen()
 {
-        tft.clear();
+        tft.fillRectangle(0,0,219,170,COLOR_BLACK);
 }
 
 int16_t ScreenDisplay::setText(int16_t xr, int16_t yr, String txt, bool box, int16_t horizontalSpace, int16_t space, int16_t txtColor, int16_t borderSize, const GFXfont font, int16_t boxColor, int16_t borderColor)
