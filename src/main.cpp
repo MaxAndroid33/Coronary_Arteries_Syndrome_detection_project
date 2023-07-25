@@ -3,6 +3,7 @@
 #include "HeartRate.h"
 #include "Connection.h"
 #include "DetectMoving.h"
+#include "StatePerson.h"
 
 const char *ssid = "root";
 const char *password = "maxmax123";
@@ -13,6 +14,7 @@ SPIClass hspi(HSPI);
 ScreenDisplay lcd;
 HeartRate heart;
 DetectMoving moving;
+StatePerson state;
 
 // Callback routine is executed when a pulse is detected
 void onBeatDetected()
@@ -24,6 +26,7 @@ void setup()
     // Initialize All Sensors 
     Serial.begin(115200);
     lcd.setup(hspi);
+    lcd.tft.setOrientation(3);
     moving.setup(lcd);
     lcd.clearScreen();
     heart.setup(lcd);
@@ -31,7 +34,7 @@ void setup()
     lcd.clearScreen();
 
 
-   
+    
     connection.setup(lcd);
     lcd.clearScreen();
     lcd.setText(0, 0, "Enter The Profile");
@@ -55,4 +58,5 @@ void setup()
 
 void loop()
 {
+        
 }
