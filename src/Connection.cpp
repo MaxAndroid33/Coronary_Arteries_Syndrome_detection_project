@@ -15,7 +15,7 @@ void Connection::setupAP(ScreenDisplay &lcd)
     Serial.print("AP IP address: ");
     lcd.setText(0, 0, "AP IP Address:");
     lcd.setText(0, 35, ip.toString());
-    delay(3000);
+    
 
     Serial.println(ip);
 }
@@ -41,7 +41,7 @@ void Connection::setupWIFI(ScreenDisplay &lcd)
     Serial.println(ip);
     lcd.setText(0, 70, "AP IP Address:");
     lcd.setText(0, 105, ip.toString());
-    delay(3000);
+    
 }
 
 void Connection::setupServer()

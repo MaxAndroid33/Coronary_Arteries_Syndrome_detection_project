@@ -26,7 +26,7 @@ String StatePerson::checkBloodOxygen(int age, float spo2)
     else if ((age >= 70) && (spo2 >= 94.9 && spo2 <= 95.999))
         return "NORMAL";
     else
-        return "NOT_NORMAL";
+        return "ABNORMAL";
 }
 
 String StatePerson::checkHeartRate(int age, float heartRate)
@@ -40,7 +40,7 @@ String StatePerson::checkHeartRate(int age, float heartRate)
     else if ((age > 14) && (heartRate >= 60 && heartRate <= 100))
         return "NORMAL";
     else
-        return "NOT_NORMAL";
+        return "ABNORMAL";
 }
 
 String StatePerson::checkBloodPressure(int age, String gender)

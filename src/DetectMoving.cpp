@@ -7,16 +7,15 @@ void DetectMoving::setup(ScreenDisplay &lcd)
     Wire.begin(SDA_PIN, SCL_PIN); // Set the SDA and SCL pins
         while (!compass.init()){
             if(count==0){
-            lcd.setText(20,0,"Failed Initialize ");
-            lcd.setText(20,35,"Moving Sensor "); 
+            lcd.setText(0,0,"Failed Initialize ");
+            lcd.setText(0,35,"Moving Sensor "); 
             }
             count++;
         }
         lcd.clearScreen();
-        lcd.setText(20,0,"Successfully");
-        lcd.setText(40,35,"Detect");
+        lcd.setText(0,0,"Successfully");
+        lcd.setText(0,35,"Detect");
         lcd.setText(0,70,"Moving Sensor ");
-        delay(3000);
     compass.enableDefault();
 }
 
