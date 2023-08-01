@@ -135,6 +135,15 @@ const char index_html[] PROGMEM = R"rawliteral(
         .accent {
             color: var(--accent-color);
         }
+
+        #bar {
+            width: 80%;
+           
+            border-radius: 20px;
+            
+            
+
+        }
     </style>
     <header>
         <h1>Patient <span class="accent">Profile</span> </h1>
@@ -163,57 +172,85 @@ const char index_html[] PROGMEM = R"rawliteral(
                 </div>
 
 
-                <div class="right">
-                    <div class="container">
-                        <h2>General Data</h2>
-                        <label>Systematic Blood Pressure :</label>
-                        <input type='number' name='SBP' required>
-                        <label>Diastolic Blood Pressure :</label>
-                        <input type='number' name='DSP' required>
-                        <label>Normal Heart Rate :</label>
-                        <input type='number' name='NHR' required>
-                        <label>Normal Body Temperature :</label>
-                        <input type='number' name='NBT' required>
-                        <label>Normal SpO2 :</label>
-                        <input type='number' name='NSPO' required> 
-                    </div>
-                    <dir></dir>
-                </div>
+
                 <div class="left">
                     <div class="container">
                         <h2>Optional</h2>
                         <label>Cholesterol
-                            <span><input type="checkbox" name="chol" id="SIC" value="cholesterol"> </span></label>
+                            <span><input type="checkbox" name="chol" id="cholesterol" value="cholesterol"
+                                    onchange="updateProgressBar()"> </span></label>
                         <label>Hypertension
-                            <span> <input type="checkbox" name="hyper" id="SIC" value="Hypertension"></span></label>
+                            <span> <input type="checkbox" name="hyper" id="Hypertension" value="Hypertension"
+                                    onchange="updateProgressBar()"></span></label>
                         <label>Diabetes
-                            <span> <input type="checkbox" name="diabetes" id="SIC" value="diabetes"></span></label>
+                            <span> <input type="checkbox" name="diabetes" id="diabetes" value="diabetes"
+                                    onchange="updateProgressBar()"></span></label>
                         <label>OverWeight
-                            <span><input type="checkbox" name="overw" id="SIC" value="overweight"></span></label>
+                            <span><input type="checkbox" name="overw" id="overweight" value="overweight"
+                                    onchange="updateProgressBar()"></span></label>
                         <label>Smoking
-                            <span><input type="checkbox" name="smok" id="SIC" value="smoking"></span></label>
+                            <span><input type="checkbox" name="smok" id="smoking" value="smoking"
+                                    onchange="updateProgressBar()"></span></label>
                         <label>Alcohol
-                            <span><input type="checkbox" name="alcoh" id="SIC" value="alcohol"></span></label>
+                            <span><input type="checkbox" name="alcoh" id="alcohol" value="alcohol"
+                                    onchange="updateProgressBar()"></span></label>
+                        <label for="file">The Possibility Of injury :</label>
+                        <h4><progress id="bar" value="0" max="100"> </progress> <span id="barvalue">0</span>%</h4>
 
 
                     </div>
 
                 </div>
             </div>
-            <div ><br></div>
+            <div><br></div>
         </main>
         <div class="container">
 
             <br><input type='submit' value='Save' id="savebtn"><br>
-            
+
 
         </div>
     </form>
     <div class="container">
-    <form action='/remove' method='post'>
-        <br><input type='submit' value='Remove All Data ' id="removebtn">
-    </form>
-</div>
+        <form action='/remove' method='post'>
+            <br><input type='submit' value='Remove All Data ' id="removebtn">
+        </form>
+    </div>
+    <script>
+
+        // Set the initial values of each item
+        let value1 = 7500 / 264;
+        let value2 = 4700 / 264;
+        let value3 = 7000 / 264;
+        let value4 = 2800 / 264;
+        let value5 = 2000 / 264;
+        let value6 = 2400 / 264;
+        // Call the updateProgressBar function to update the progress bar with the initial values
+        updateProgressBar();
+
+        function updateProgressBar() {
+            // Get the checkbox values
+            const item1 = document.getElementById("cholesterol").checked;
+            const item2 = document.getElementById("Hypertension").checked;
+            const item3 = document.getElementById("diabetes").checked;
+            const item4 = document.getElementById("overweight").checked;
+            const item5 = document.getElementById("smoking").checked;
+            const item6 = document.getElementById("alcohol").checked;
+            const progressBar = document.getElementById("bar");
+            const value = document.getElementById("barvalue");
+            
+            // Calculate the total value of all checked items
+            const totalValue = (value1 * item1) + (value2 * item2) + (value3 * item3) + (value4 * item4) + (value5 * item5) + (value6 * item6);
+
+            // Calculate the total percentage based on the sum of checked values
+            const totalPercentage = totalValue.toFixed(2);
+
+            // Update the progress bar
+            progressBar.value = totalValue;
+            value.textContent = Math.round(totalValue * 10) / 10;
+        }
+
+    </script>
 </body>
 
 </html>
