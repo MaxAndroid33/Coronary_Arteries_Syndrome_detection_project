@@ -15,11 +15,11 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
+
 
 class TempSensor
 {
-    Adafruit_BME280 bme; // I2C
+   
 public:
     void setup(ScreenDisplay &lcd);
     float readTemperature();
