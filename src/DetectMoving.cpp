@@ -32,12 +32,12 @@ bool DetectMoving::detectMoving()
     /* Compare the old and new values to see if they have changed beyond the threshold */
     if (abs(newX - oldX) > differenceThreshold || abs(newY - oldY) > differenceThreshold || abs(newZ - oldZ) > differenceThreshold)
     {
-        Serial.println("patient is moving");
+        // Serial.println("patient is moving");
         state = true;
     }
     else
     {
-        Serial.println("patient not is moving");
+        // Serial.println("patient not is moving");
         state = false;
     }
 

@@ -32,8 +32,8 @@ float HeartRate::readHeartRate()
     pox.update();
     // Get heart rate
     float heartRate = pox.getHeartRate();
-    Serial.print("Heart Rate: ");
-    Serial.println(heartRate);
+    // Serial.print("Heart Rate: ");
+    // Serial.println(heartRate);
 
     // Delay for a short period before the next reading
     delay(100);
@@ -48,9 +48,9 @@ float HeartRate::readOxygenSaturation()
     // Get oxygen saturation reading
     float oxygenSaturation = pox.getSpO2();
 
-    Serial.print(" bpm, SpO2: ");
-    Serial.print(oxygenSaturation);
-    Serial.println("%");
+    // Serial.print(" bpm, SpO2: ");
+    // Serial.print(oxygenSaturation);
+    // Serial.println("%");
 
     // Delay for a short period before the next reading
     delay(100);
