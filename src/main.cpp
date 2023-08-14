@@ -10,7 +10,7 @@
 #define SELECT_PAGE_PIN_BTN 27
 const char *ssid = "root";
 const char *password = "maxmax123";
-String DoctorNumber = "+967777013011";
+String DoctorNumber = "+96777731173";
 Connection connection(ssid, password);
 SPIClass hspi(HSPI);
 
@@ -24,6 +24,7 @@ int16_t w;
 int onceSlide = 0;
 float lastHarRate = 0.0, lastSpo2 = 0.0;
 SoftwareSerial mySerial(1, 3); //(rx, tx)
+int count =0;
 
 // Callback routine is executed when a pulse is detected
 // void onBeatDetected()
@@ -33,18 +34,21 @@ SoftwareSerial mySerial(1, 3); //(rx, tx)
 
 void slidePage()
 {
+ 
   lcd.clearScreen();
   setPage.slidePage(lcd);
-  state.alertDoctor(DoctorNumber, mySerial);
-  state.alert();
-  state.dangerLevel = 10;
+  if(state.dangerLevel <=2)
+  count =1;
+  
+  
 }
 void setup()
 {
 
   // // Initialize All Sensors
-  // Serial.begin(115200);
+  Serial.begin(115200);
   state.begin(mySerial);
+    
   attachInterrupt(digitalPinToInterrupt(SELECT_PAGE_PIN_BTN), slidePage, RISING);
   lcd.setup(hspi);
   lcd.tft.setOrientation(3);
@@ -76,12 +80,7 @@ void setup()
 
   // Check if all data are saved
   connection.checkOneTimeSetup();
-  if (connection.readFromSD("Doctor") == "NO")
-  {
-    Serial.println("Send To Doctor");
-    state.sendSms(connection.readAllData(), DoctorNumber, mySerial);
-    connection.writeData("Doctor", "YES");
-  }
+
   lcd.clearScreen();
   lcd.setText(0, 0, "Successfully Saved");
   lcd.setText(0, 35, "Patient Profile");
@@ -99,7 +98,13 @@ void setup()
 
 void loop()
 {
-
+ if((connection.readFromSD("Doctor") == "NO" )){
+    String message=String("Patient ID:")+connection.readFromSD("id");
+    // Serial.println("Send To Doctor");
+    state.sendSms(message, DoctorNumber, mySerial);
+    connection.writeData("Doctor", "YES");
+    
+  }
   if (int(heart.readHeartRate()) > 20)
     lastHarRate = heart.readHeartRate();
   if (int(heart.readOxygenSaturation()) > 20)
@@ -112,5 +117,12 @@ void loop()
                           lastHarRate, lastSpo2);
 
   setPage.heartRatePageValues(lcd, heart, moving, temp);
+  if(count==1){
+  state.alertDoctor(DoctorNumber, mySerial);
+  state.alert();
+  state.dangerLevel = 10;
+  count=0;
+  }
+ 
   // state.alert();
 }
