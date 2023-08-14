@@ -15,7 +15,6 @@ void Connection::setupAP(ScreenDisplay &lcd)
     Serial.print("AP IP address: ");
     lcd.setText(0, 0, "AP IP Address:");
     lcd.setText(0, 35, ip.toString());
-    
 
     Serial.println(ip);
 }
@@ -41,7 +40,6 @@ void Connection::setupWIFI(ScreenDisplay &lcd)
     Serial.println(ip);
     lcd.setText(0, 70, "AP IP Address:");
     lcd.setText(0, 105, ip.toString());
-    
 }
 
 void Connection::setupServer()
@@ -63,11 +61,9 @@ void Connection::setupServer()
     preferences.begin("AllData", false);
 }
 
-
-
 void Connection::setup(ScreenDisplay &lcd, bool isAccessPoint)
 {
-   
+
     if (isAccessPoint)
     {
         setupAP(lcd);
@@ -76,9 +72,8 @@ void Connection::setup(ScreenDisplay &lcd, bool isAccessPoint)
     {
         setupWIFI(lcd);
     }
-    
+
     setupServer();
-    
 }
 
 void Connection::writeData(AsyncWebServerRequest *request)
@@ -89,17 +84,18 @@ void Connection::writeData(AsyncWebServerRequest *request)
         preferences.putString("gender", request->getParam("gender", true)->value());
         preferences.putString("age", request->getParam("age", true)->value());
         preferences.putString("date", request->getParam("date", true)->value());
-        preferences.putString("DSP", request->getParam("DSP", true)->value());
-        preferences.putString("NHR", request->getParam("NHR", true)->value());
-        preferences.putString("SBP", request->getParam("SBP", true)->value());
-        preferences.putString("NBT", request->getParam("NBT", true)->value());
-        preferences.putString("NSPO", request->getParam("NSPO", true)->value());
+        // preferences.putString("DSP", request->getParam("DSP", true)->value());
+        // preferences.putString("NHR", request->getParam("NHR", true)->value());
+        // preferences.putString("SBP", request->getParam("SBP", true)->value());
+        // preferences.putString("NBT", request->getParam("NBT", true)->value());
+        // preferences.putString("NSPO", request->getParam("NSPO", true)->value());
         preferences.putString("chol", request->hasParam("chol", true) ? "Yes" : "No");
         preferences.putString("hyper", request->hasParam("hyper", true) ? "Yes" : "No");
         preferences.putString("diabetes", request->hasParam("diabetes", true) ? "Yes" : "No");
         preferences.putString("overw", request->hasParam("overw", true) ? "Yes" : "No");
         preferences.putString("smok", request->hasParam("smok", true) ? "Yes" : "No");
         preferences.putString("alcoh", request->hasParam("alcoh", true) ? "Yes" : "No");
+        preferences.putString("Doctor", "NO");
     }
     // Close the Preferences
     preferences.end();
@@ -123,17 +119,18 @@ String Connection::readAllData()
                  String("Gender :") + readFromSD("gender") + String("\n") +
                  String("Age :") + readFromSD("age") + String("\n") +
                  String("Date") + readFromSD("date") + String("\n") +
-                 String("DSP :") + readFromSD("DSP") + String("\n") +
-                 String("NHR :") + readFromSD("NHR") + String("\n") +
-                 String("SBP :") + readFromSD("SBP") + String("\n") +
-                 String("NBT :") + readFromSD("NBT") + String("\n") +
-                 String("Normal SPO2 :") + readFromSD("NSPO") + String("\n") +
+                 //  String("DSP :") + readFromSD("DSP") + String("\n") +
+                 //  String("NHR :") + readFromSD("NHR") + String("\n") +
+                 //  String("SBP :") + readFromSD("SBP") + String("\n") +
+                 //  String("NBT :") + readFromSD("NBT") + String("\n") +
+                 //  String("Normal SPO2 :") + readFromSD("NSPO") + String("\n") +
                  String("Cholesterol :") + readFromSD("chol") + String("\n") +
                  String("Hypertension :") + readFromSD("hyper") + String("\n") +
                  String("Diabetes :") + readFromSD("diabetes") + String("\n") +
                  String("OverWight :") + readFromSD("overw") + String("\n") +
                  String("Smoking :") + readFromSD("smok") + String("\n") +
-                 String("Alcohol :") + readFromSD("alcoh") + String("\n");
+                 String("Alcohol :") + readFromSD("alcoh") + String("\n") +
+                 String("Doctor :") + readFromSD("Doctor") + String("\n");
     return all;
 }
 
@@ -141,6 +138,7 @@ void Connection::removeAllData(AsyncWebServerRequest *request)
 {
     request->send(200, "text/plain", "remove All Data !!! <br> Restarting in 10 seconds...");
     preferences.clear();
+    readAllData();
     Serial.println("Restarting in 10 seconds...");
     delay(10000);
 
@@ -154,4 +152,9 @@ void Connection::checkOneTimeSetup()
     while (check == "None")
     {
     }
+}
+
+void Connection::writeData(const char *key, const char *message)
+{
+    preferences.putString(key, message);
 }

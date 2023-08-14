@@ -8,12 +8,18 @@ String StatePerson::checkBloodPressure(float systolic, float diastolic)
         return "NORMAL";
     else if ((systolic > 120 && systolic < 129) && (diastolic < 80))
         return "ELEVATED";
-    else if ((systolic >= 130 && systolic < 139) || (diastolic > 80 && diastolic < 89))
+    else if ((systolic >= 130 && systolic < 139) || (diastolic > 80 && diastolic < 89)){
+        dangerLevel =stage1;
         return "HYPERTENSION_STAGE_1";
-    else if ((systolic >= 140) || (diastolic >= 90))
+    }
+    else if ((systolic >= 140) || (diastolic >= 90)){
+        dangerLevel =stage2;
         return "HYPERTENSION_STAGE_2";
-    else if ((systolic > 180) || (diastolic > 120))
+    }
+    else if ((systolic > 180) || (diastolic > 120)){
+        dangerLevel =stage3;
         return "HYPERTENSION_CRISIS";
+    }
     else
         return "NONE";
 }
@@ -25,8 +31,10 @@ String StatePerson::checkBloodOxygen(int age, float spo2)
         return "NORMAL";
     else if ((age >= 70) && (spo2 >= 94.9 && spo2 <= 95.999))
         return "NORMAL";
-    else
+    else{
+        dangerLevel =oxygen;
         return "ABNORMAL";
+    }
 }
 
 String StatePerson::checkHeartRate(int age, float heartRate)
@@ -39,8 +47,10 @@ String StatePerson::checkHeartRate(int age, float heartRate)
         return "NORMAL";
     else if ((age > 14) && (heartRate >= 60 && heartRate <= 100))
         return "NORMAL";
-    else
+    else{
+        dangerLevel =heart;
         return "ABNORMAL";
+    }
 }
 
 String StatePerson::checkBloodPressure(int age, String gender)
@@ -76,4 +86,72 @@ String StatePerson::ageLevel(int age)
         return "old_aged";
     else
         return "NONE";
+}
+
+void StatePerson::sendSms(String message, String number,SoftwareSerial &mySerial)
+{
+    mySerial.println("AT"); // Once the handshake test is successful, it will back to OK
+    updateSerial(mySerial);
+
+    mySerial.println("AT+CMGF=1"); // Configuring TEXT mode
+    updateSerial(mySerial);
+    mySerial.println("AT+CMGS=\"" + number + "\""); // change ZZ with country code and xxxxxxxxxxx with phone number to sms
+    updateSerial(mySerial);
+    mySerial.print(message); // text content
+    updateSerial(mySerial);
+    mySerial.write(26);
+}
+
+void StatePerson::alertDoctor(String number ,SoftwareSerial &mySerial)
+{
+    switch (dangerLevel)
+    {
+    case stage1:
+        sendSms("Patient has HYPERTENSION_STAGE_1",number,mySerial);
+        break;
+    case stage2:
+        sendSms("Patient has HYPERTENSION_STAGE_2",number,mySerial);
+        break;
+    case stage3:
+        sendSms("Patient has HYPERTENSION_CRISIS",number,mySerial);
+        break;
+    // case oxygen:
+    //     sendSms("Patient's Blood Oxygen is not Normal",number,mySerial);
+    //     break;
+    // case heart:
+    //     sendSms("Patient's Heart Rate is not Normal",number,mySerial);
+        // break;
+    
+    default:
+        break;
+    }
+    Serial.println(dangerLevel);
+}
+void StatePerson::alert()
+{
+    if(dangerLevel ==2)
+    while(true){
+        Serial.println("Alert !!");
+    };
+}
+
+void StatePerson::updateSerial(SoftwareSerial &mySerial)
+{
+    delay(500);
+    // while (Serial.available())
+    // {
+    //     mySerial.write(Serial.read()); // Forward what Serial received to Software Serial Port
+    // }
+    while (mySerial.available())
+    {
+        Serial.write(mySerial.read()); // Forward what Software Serial received to Serial Port
+    }
+}
+
+
+
+void StatePerson::begin(SoftwareSerial &mySerial)
+{  
+    mySerial.begin(9600);
+    delay(4000);
 }

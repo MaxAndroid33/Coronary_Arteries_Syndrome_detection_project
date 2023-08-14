@@ -38,6 +38,7 @@ public:
     String readAllData();
     void removeAllData(AsyncWebServerRequest *request);
     void checkOneTimeSetup();
+    void writeData(const char * key,const char * message);
 };
 
 #endif
