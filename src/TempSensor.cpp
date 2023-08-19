@@ -26,3 +26,10 @@ float TempSensor::readTemperature()
         return temperature;
     }
 }
+
+String TempSensor::checkTemperatureBody()
+{
+    if(temperature == 80) return "HYPOTHERMIA";
+    if(temperature ==20) return "HYPERTHERMIA";
+    else return "NORMAL";
+}

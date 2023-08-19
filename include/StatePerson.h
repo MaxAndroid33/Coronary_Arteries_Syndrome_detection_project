@@ -12,11 +12,10 @@ class StatePerson
 {
     enum
     {
-        stage1 = 0,
-        stage2 = 1,
-        stage3 = 2,
-        oxygen = 3,
-        heart = 4
+        stage1 = 1,
+        stage2 = 2,
+        stage3 = 3,
+        
 
     };
 
@@ -32,6 +31,7 @@ public:
     void alertDoctor(String number, SoftwareSerial &mySerial);
     void updateSerial(SoftwareSerial &mySerial);
     void alert();
+    void testBody(String Blood ,String heartRate,String temp,String spo2);
 };
 
 #endif // __STATEPERSON_H__

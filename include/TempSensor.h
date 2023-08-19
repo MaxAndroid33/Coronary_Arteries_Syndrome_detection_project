@@ -26,6 +26,7 @@ public:
      TempSensor(uint8_t tempPin);
     void begin();
     float readTemperature();
+    String checkTemperatureBody();
 
 
 };

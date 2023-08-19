@@ -8,16 +8,19 @@ String StatePerson::checkBloodPressure(float systolic, float diastolic)
         return "NORMAL";
     else if ((systolic > 120 && systolic < 129) && (diastolic < 80))
         return "ELEVATED";
-    else if ((systolic >= 130 && systolic < 139) || (diastolic > 80 && diastolic < 89)){
-        dangerLevel =stage1;
+    else if ((systolic >= 130 && systolic < 139) || (diastolic > 80 && diastolic < 89))
+    {
+        dangerLevel = stage1;
         return "HYPERTENSION_STAGE_1";
     }
-    else if ((systolic >= 140) || (diastolic >= 90)){
-        dangerLevel =stage2;
+    else if ((systolic >= 140) || (diastolic >= 90))
+    {
+        dangerLevel = stage2;
         return "HYPERTENSION_STAGE_2";
     }
-    else if ((systolic > 180) || (diastolic > 120)){
-        dangerLevel =stage3;
+    else if ((systolic > 180) || (diastolic > 120))
+    {
+        dangerLevel = stage3;
         return "HYPERTENSION_CRISIS";
     }
     else
@@ -31,8 +34,9 @@ String StatePerson::checkBloodOxygen(int age, float spo2)
         return "NORMAL";
     else if ((age >= 70) && (spo2 >= 94.9 && spo2 <= 95.999))
         return "NORMAL";
-    else{
-        dangerLevel =oxygen;
+    else
+    {
+        
         return "ABNORMAL";
     }
 }
@@ -47,8 +51,9 @@ String StatePerson::checkHeartRate(int age, float heartRate)
         return "NORMAL";
     else if ((age > 14) && (heartRate >= 60 && heartRate <= 100))
         return "NORMAL";
-    else{
-        dangerLevel =heart;
+    else
+    {
+      
         return "ABNORMAL";
     }
 }
@@ -88,7 +93,7 @@ String StatePerson::ageLevel(int age)
         return "NONE";
 }
 
-void StatePerson::sendSms(String message, String number,SoftwareSerial &mySerial)
+void StatePerson::sendSms(String message, String number, SoftwareSerial &mySerial)
 {
     mySerial.println("AT"); // Once the handshake test is successful, it will back to OK
     updateSerial(mySerial);
@@ -102,26 +107,26 @@ void StatePerson::sendSms(String message, String number,SoftwareSerial &mySerial
     mySerial.write(26);
 }
 
-void StatePerson::alertDoctor(String number ,SoftwareSerial &mySerial)
+void StatePerson::alertDoctor(String number, SoftwareSerial &mySerial)
 {
     switch (dangerLevel)
     {
     case stage1:
-        sendSms("Patient has HYPERTENSION_STAGE_1",number,mySerial);
+        sendSms("Heart Attack", number, mySerial);
         break;
     case stage2:
-        sendSms("Patient has HYPERTENSION_STAGE_2",number,mySerial);
+        sendSms("Angina Pectoris", number, mySerial);
         break;
     case stage3:
-        sendSms("Patient has HYPERTENSION_CRISIS",number,mySerial);
+        sendSms("Cardiac Arrest", number, mySerial);
         break;
-    // case oxygen:
-    //     sendSms("Patient's Blood Oxygen is not Normal",number,mySerial);
-    //     break;
-    // case heart:
-    //     sendSms("Patient's Heart Rate is not Normal",number,mySerial);
+        // case oxygen:
+        //     sendSms("Patient's Blood Oxygen is not Normal",number,mySerial);
+        //     break;
+        // case heart:
+        //     sendSms("Patient's Heart Rate is not Normal",number,mySerial);
         // break;
-    
+
     default:
         break;
     }
@@ -129,10 +134,31 @@ void StatePerson::alertDoctor(String number ,SoftwareSerial &mySerial)
 }
 void StatePerson::alert()
 {
-    if(dangerLevel ==2)
-    while(true){
-        Serial.println("Alert !!");
-    };
+    if (dangerLevel == 2)
+        while (true)
+        {
+            Serial.println("Alert !!");
+        };
+}
+
+void StatePerson::testBody(String Blood, String heartRate, String temp, String spo2)
+{
+    if ((Blood == "HYPERTENSION_STAGE_1" || Blood == "HYPERTENSION_STAGE_2") && (heartRate == "ABNORMAL") 
+    && ((temp == "HYPERTHERMIA")||(temp == "HYPOTHERMIA")), (spo2 == "ABNORMAL"))
+    {
+        dangerLevel=1;
+    }
+    if ((Blood == "HYPERTENSION_STAGE_1" || Blood == "HYPERTENSION_STAGE_2") && (heartRate == "ABNORMAL") 
+    && (temp == "HYPERTHERMIA"), (spo2 == "ABNORMAL"))
+    {
+        dangerLevel=2;
+    }
+    if ((Blood =="NORMAL") && (heartRate == "ABNORMAL") 
+    && (temp == "HYPOTHERMIA"), (spo2 == "ABNORMAL"))
+    {
+        dangerLevel=3;
+    }
+    
 }
 
 void StatePerson::updateSerial(SoftwareSerial &mySerial)
@@ -148,10 +174,8 @@ void StatePerson::updateSerial(SoftwareSerial &mySerial)
     }
 }
 
-
-
 void StatePerson::begin(SoftwareSerial &mySerial)
-{  
+{
     mySerial.begin(9600);
     delay(4000);
 }
