@@ -19,7 +19,7 @@ HeartRate heart;
 DetectMoving moving;
 StatePerson state;
 Pages setPage;
-TempSensor temp;
+TempSensor temp(4);
 int16_t w;
 int onceSlide = 0;
 float lastHarRate = 0.0, lastSpo2 = 0.0;
@@ -54,7 +54,7 @@ void setup()
   lcd.tft.setOrientation(3);
   lcd.clearScreen();
   // Temperature Setup Sensor
-  temp.setup(lcd);
+  temp.begin();
   delay(1000);
   lcd.clearScreen();
   // Moving Setup Sensor
@@ -124,5 +124,6 @@ void loop()
   count=0;
   }
  
+
   // state.alert();
 }

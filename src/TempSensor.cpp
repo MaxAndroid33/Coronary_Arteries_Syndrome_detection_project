@@ -1,32 +1,28 @@
-
 #include "TempSensor.h"
 
-void TempSensor::setup(ScreenDisplay &lcd)
+TempSensor::TempSensor(uint8_t tempPin) : tempPin(tempPin)
 {
-    // int count = 0;
-    // while (!bme.begin())
-    // {
-    //     if (count == 0)
-    //     {
-    //         lcd.setText(0, 0, "Failed Initialize ");
-    //         lcd.setText(0, 35, "Temperature Sensor ");
-    //     }
-    //     count++;
-    //     if(count =10) break;
-    // }
-    // lcd.clearScreen();
-    // lcd.setText(0, 0, "Successfully");
-    // lcd.setText(0, 35, "Detect");
-    // lcd.setText(0, 70, "Temperature Sensor ");
 }
 
+void TempSensor::begin()
+{
+    oneWire.begin(tempPin);
+    tempSensor.setOneWire(&oneWire);
+
+    tempSensor.begin();
+}
 float TempSensor::readTemperature()
 {
 
-    // Serial.print("Temperature = ");
-    // Serial.print(bme.readTemperature());
-    // Serial.println(" *C");
-
-    // return bme.readTemperature();
-    return 0.00;
+    tempSensor.requestTemperatures();
+    float tempC = tempSensor.getTempCByIndex(0);
+    if (int(tempC) == -127)
+    {   
+        return temperature;
+    }
+    else
+    {
+        temperature = tempC;
+        return temperature;
+    }
 }

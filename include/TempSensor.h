@@ -1,7 +1,6 @@
 #ifndef __TEMPSENSOR_H__
 #define __TEMPSENSOR_H__
 
-
 #ifndef __ARDUINO_H
 #define __ARDUINO_H
 #include <Arduino.h>
@@ -13,18 +12,22 @@
 #endif
 
 #include <Wire.h>
-#include <SPI.h>
-#include <Adafruit_Sensor.h>
-
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 class TempSensor
 {
-   
+    OneWire oneWire;
+    DallasTemperature tempSensor;
+    volatile uint8_t tempPin;
+
 public:
-    void setup(ScreenDisplay &lcd);
+    float temperature =0;
+     TempSensor(uint8_t tempPin);
+    void begin();
     float readTemperature();
 
-};
 
+};
 
 #endif // __TEMPSENSOR_H__

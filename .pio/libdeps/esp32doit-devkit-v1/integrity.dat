@@ -1,10 +1,11 @@
-adafruit/Adafruit BusIO@^1.14.1
-ESP Async WebServer
 nkawu/TFT 22 ILI9225@^1.4.5
-https://github.com/dvarrel/ESPAsyncWebSrv.git
-plerup/EspSoftwareSerial@^8.1.0
-adafruit/Adafruit LSM303 Accel@^1.1.6
-scrn92/Sim800L Library - All functions@^1.0.0
-oxullo/MAX30100lib@^1.2.1
-pololu/LSM303@^3.0.1
 ayushsharma82/AsyncElegantOTA @ ^2.2.5
+pololu/LSM303@^3.0.1
+https://github.com/dvarrel/ESPAsyncWebSrv.git
+adafruit/Adafruit LSM303 Accel@^1.1.6
+ESP Async WebServer
+scrn92/Sim800L Library - All functions@^1.0.0
+plerup/EspSoftwareSerial@^8.1.0
+milesburton/DallasTemperature@^3.11.0
+oxullo/MAX30100lib@^1.2.1
+adafruit/Adafruit BusIO@^1.14.1
