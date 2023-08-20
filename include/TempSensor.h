@@ -22,7 +22,7 @@ class TempSensor
     volatile uint8_t tempPin;
 
 public:
-    float temperature =0;
+    float temperature =26;
      TempSensor(uint8_t tempPin);
     void begin();
     float readTemperature();

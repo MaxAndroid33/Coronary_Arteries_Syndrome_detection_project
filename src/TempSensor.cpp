@@ -13,7 +13,7 @@ void TempSensor::begin()
 }
 float TempSensor::readTemperature()
 {
-
+    begin();
     tempSensor.requestTemperatures();
     float tempC = tempSensor.getTempCByIndex(0);
     if (int(tempC) == -127)

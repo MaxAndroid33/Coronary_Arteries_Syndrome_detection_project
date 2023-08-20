@@ -69,7 +69,7 @@ void Pages::heartRatePageValues(ScreenDisplay &lcd, HeartRate &heart, DetectMovi
         lcd.setText(w + 10, 25, movingState + "                 ", true, 0, 2, COLOR_WHITE, 2, FreeSans9pt7b, COLOR_BLACK);
         lcd.setText(w + 32, 60, String(heart.readHeartRate()) + "        ", true, 0, 10, COLOR_WHITE, 2, FreeSans9pt7b, COLOR_BLACK);
         lcd.setText(w + 22, 95, String(heart.readOxygenSaturation()) + "      ", true, 0, 10, COLOR_WHITE, 2, FreeSans9pt7b, COLOR_BLACK);
-        lcd.setText(w + 22, 130, String(temp.readTemperature()) + "      ", true, 0, 10, COLOR_WHITE, 2, FreeSans9pt7b, COLOR_BLACK);
+        lcd.setText(w + 22, 130, String(temp.temperature) + "      ", true, 0, 10, COLOR_WHITE, 2, FreeSans9pt7b, COLOR_BLACK);
     }
     else
     {
